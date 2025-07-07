@@ -1,4 +1,4 @@
-# Logs
+# ─── Logs ─────────────────────────────
 logs
 *.log
 npm-debug.log*
@@ -7,18 +7,33 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# ─── Node Modules ─────────────────────
+node_modules/
+
+# ─── Build Output ─────────────────────
+dist/
+dist-ssr/
 *.local
 
-# Editor directories and files
+# Ignore all generated JS and declaration files (in src/, packages, etc.)
+**/*.js
+**/*.jsx
+**/*.d.ts
+**/*.js.map
+**/*.tsbuildinfo
+
+# ─── Editor / IDE ─────────────────────
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# ─── Optional: prevent accidental tracking of output directories ─────────
+apps/**/build/
+apps/**/out/
+apps/**/coverage/

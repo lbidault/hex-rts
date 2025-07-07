@@ -1,5 +1,5 @@
-import { Renderer } from "../../../core/src/ports/Renderer";
-import { Unit } from "../../../core/src/domain/Unit";
+import { Renderer } from "../../../../core/src/ports/Renderer";
+import { Unit } from "../../../../core/src/domain/Unit";
 
 export class CanvasRenderer implements Renderer {
   constructor(private ctx: CanvasRenderingContext2D) {}
