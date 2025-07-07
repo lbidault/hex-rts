@@ -1,5 +1,5 @@
-import { UnitRepository } from "../../core/ports/UnitRepository";
-import { Unit } from "../../core/domain/Unit";
+import { UnitRepository } from "../../../core/src/ports/UnitRepository";
+import { Unit } from "../../../core/src/domain/Unit";
 
 export class InMemoryUnitRepository implements UnitRepository {
   private units = new Map<Unit["id"], Unit>();

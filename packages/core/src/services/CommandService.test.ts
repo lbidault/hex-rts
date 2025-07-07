@@ -1,6 +1,6 @@
 import { CommandService } from "./CommandService";
 import { Unit } from "../domain/Unit";
-import { InMemoryUnitRepository } from "../../adapters/repositories/InMemoryUnitRepository";
+import { InMemoryUnitRepository } from "../../../adapters/src/shared/InMemoryUnitRepository";
 import { SelectUnitCommand } from "./SelectUnitCommand";
 import { MoveUnitCommand } from "./MoveUnitCommand";
 
