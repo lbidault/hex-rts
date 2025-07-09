@@ -1,79 +1,55 @@
 import { useEffect, useRef, useState } from "react";
-import { Unit } from "../../../../packages/core/src/domain/Unit";
-import { CommandService } from "../../../../packages/core/src/services/CommandService";
-import { SelectUnitCommand } from "../../../../packages/core/src/services/SelectUnitCommand";
-import { InMemoryUnitRepository } from "../../../../packages/adapters/src/shared/InMemoryUnitRepository";
-import { CanvasRenderer } from "../../../../packages/adapters/src/client/rendering/CanvasRenderer";
-import { MoveUnitCommand } from "../../../../packages/core/src/services/MoveUnitCommand";
+import { CanvasRenderer } from "@adapters/client/rendering/CanvasRenderer";
+import { GameEngine } from "@core/game/GameEngine";
+import { SelectionArea } from "@core/ecs/systems/selection/SelectionArea";
+import { InputHandler } from "@core/input/InputHandler";
+import { InputStateMachine } from "@core/input/InputStateMachine";
+import { CanvasInputAdapter } from "@adapters/client/input/CanvasInputAdapter";
 
 export const useGameEngine = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [units, setUnits] = useState<Unit[]>([]);
+  const [dragArea, setDragArea] = useState<SelectionArea | null>(null);
+  const dragAreaRef = useRef<SelectionArea | null>(null);
+
+  const updateDragArea = (area: SelectionArea | null) => {
+    dragAreaRef.current = area;
+    setDragArea(area);
+  };
+
+  const engineRef = useRef<GameEngine | null>(null);
+
+  const getDragArea = () => {
+    return dragAreaRef.current;
+  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Initialize
     const ctx = canvasRef.current.getContext("2d")!;
-    const renderer = new CanvasRenderer(ctx);
-    const repository = new InMemoryUnitRepository();
-    const commandService = new CommandService();
+    const renderer = new CanvasRenderer(ctx, getDragArea);
+    const engine = new GameEngine(renderer);
 
-    // Create test units
-    const initialUnits = [
-      new Unit("1", { x: 50, y: 50 }),
-      new Unit("2", { x: 150, y: 150 }),
-    ];
-    initialUnits.forEach((u) => repository.save(u));
-    setUnits(initialUnits);
+    const selectionSystem = engine.getSelectionSystem();
+    const handler = new InputHandler(selectionSystem, updateDragArea);
+    const stateMachine = new InputStateMachine(handler);
+    const input = new CanvasInputAdapter(canvasRef.current, stateMachine);
 
-    // Render loop
-    const gameLoop = () => {
-      renderer.clear();
-      repository.getAll().forEach(renderer.renderUnit.bind(renderer));
-      requestAnimationFrame(gameLoop);
+    input.setupEventListeners();
+
+    engine.start();
+
+    engineRef.current = engine;
+
+    return () => {
+      input.dispose();
+      engine.stop();
     };
-    gameLoop();
-
-    // Click handler
-    const handleClick = (e: MouseEvent) => {
-      const rect = canvasRef.current!.getBoundingClientRect();
-      const clickPos = {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-
-      // Find clicked unit (simple radius check)
-      const clickedUnit = repository.getAll().find((u) => {
-        const dx = u.position.x - clickPos.x;
-        const dy = u.position.y - clickPos.y;
-        return Math.sqrt(dx * dx + dy * dy) < 15;
-      });
-
-      if (clickedUnit) {
-        const selectUnitCommand = new SelectUnitCommand(
-          repository,
-          clickedUnit.id
-        );
-        commandService.execute(selectUnitCommand);
-      } else {
-        // Move all selected units
-        repository
-          .getAll()
-          .filter((u) => u.selected)
-          .forEach((u) =>
-            commandService.execute(
-              new MoveUnitCommand(repository, u.id, clickPos)
-            )
-          );
-      }
-
-      setUnits([...repository.getAll()]);
-    };
-
-    canvasRef.current.addEventListener("click", handleClick);
-    return () => canvasRef.current?.removeEventListener("click", handleClick);
   }, []);
 
-  return { canvasRef, units };
+  return {
+    canvasRef,
+    dragArea,
+    setDragArea,
+    engine: engineRef.current, // utile pour commandes, debug
+  };
 };
