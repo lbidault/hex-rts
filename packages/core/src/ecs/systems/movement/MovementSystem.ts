@@ -1,5 +1,5 @@
 import { EntityManager } from "../../EntityManager";
-import { distance, normalize, scale, Vector } from "../../../utils/math";
+import { distance, normalize, scale, Vector2D } from "../../../utils/math";
 
 const SPEED = 100;
 
@@ -40,7 +40,7 @@ export class MovementSystem {
     }
   }
 
-  orderMoveTo(entityIds: string[], target: Vector) {
+  orderMoveTo(entityIds: string[], target: Vector2D) {
     for (const entityId of entityIds) {
       this.entityManager.targetPositionComponents.add(entityId, { target });
 

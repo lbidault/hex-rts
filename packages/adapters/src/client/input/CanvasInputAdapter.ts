@@ -1,4 +1,4 @@
-import { Position } from "../../../../core/src/utils/math";
+import { Vector2D } from "../../../../core/src/utils/math";
 import { InputStateMachine } from "../../../../core/src/input/InputStateMachine";
 
 export class CanvasInputAdapter {
@@ -55,14 +55,14 @@ export class CanvasInputAdapter {
     });
   };
 
-  private getNormalizedPosition(e: MouseEvent): Position {
+  private getNormalizedPosition(e: MouseEvent): Vector2D {
     const rect = this.canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     return this.normalizePosition(x, y);
   }
 
-  private normalizePosition(x: number, y: number): Position {
+  private normalizePosition(x: number, y: number): Vector2D {
     return {
       x: (x / this.canvas.width) * 800,
       y: (y / this.canvas.height) * 600,

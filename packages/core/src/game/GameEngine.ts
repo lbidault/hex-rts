@@ -2,11 +2,11 @@ import { GameLoop } from "./GameLoop";
 import { SelectionSystem } from "../ecs/systems/selection/SelectionSystem";
 // import { MovementSystem } from "../ecs/systems/mouvement/MouvementSystem";
 import { Renderer } from "../ports/Renderer"; // ou autre renderer
-import { Vector } from "../utils/math";
+import { Vector2D } from "../utils/math";
 import { MovementSystem } from "../ecs/systems/movement/MovementSystem";
 import { EntityManager } from "../ecs/EntityManager";
 
-const DEFAULT_UNITS: { position: Vector }[] = [
+const DEFAULT_UNITS: { position: Vector2D }[] = [
   { position: { x: 50, y: 50 } },
   { position: { x: 150, y: 150 } },
 ];

@@ -1,5 +1,5 @@
-import { Vector } from "../../utils/math";
+import { Vector2D } from "../../utils/math";
 
 export interface VelocityComponent {
-  velocity: Vector;
+  velocity: Vector2D;
 }

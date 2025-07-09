@@ -1,6 +1,5 @@
 import { ComponentStore } from "./ComponentStore";
 import { PositionComponent } from "./components/Position";
-import { SelectedComponent } from "./components/Selected";
 import { TargetPositionComponent } from "./components/TargetPosition";
 import { VelocityComponent } from "./components/Velocity";
 

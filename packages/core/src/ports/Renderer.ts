@@ -1,9 +1,8 @@
-import { SelectionArea } from "../ecs/systems/selection/SelectionArea";
-import { Position } from "../utils/math";
+import { Vector2D } from "../utils/math";
 
 export interface RenderableEntity {
   id: string;
-  position: Position;
+  position: Vector2D;
   selected: boolean;
 }
 

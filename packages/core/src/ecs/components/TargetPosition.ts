@@ -1,5 +1,5 @@
-import { Vector } from "../../utils/math";
+import { Vector2D } from "../../utils/math";
 
 export interface TargetPositionComponent {
-  target: Vector;
+  target: Vector2D;
 }

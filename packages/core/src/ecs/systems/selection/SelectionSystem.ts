@@ -1,4 +1,4 @@
-import { Vector, distance } from "../../../utils/math";
+import { Vector2D, distance } from "../../../utils/math";
 import { EntityManager } from "../../EntityManager";
 import { SelectionArea } from "./SelectionArea";
 
@@ -27,7 +27,7 @@ export class SelectionSystem {
     this.entityManager.selectedEntityIds.clear();
   }
 
-  findEntityAtPosition(pos: Vector): string | undefined {
+  findEntityAtPosition(pos: Vector2D): string | undefined {
     return this.entityManager.positionComponents
       .getAll()
       .find(([, c]) => distance(c.position, pos) < UNIT_SELECT_RADIUS)?.[0];
