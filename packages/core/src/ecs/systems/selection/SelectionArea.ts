@@ -1,9 +1,9 @@
-import { Position } from "../../../utils/math";
+import { Vector } from "../../../utils/math";
 
 export class SelectionArea {
-  constructor(public readonly start: Position, public readonly end: Position) {}
+  constructor(public readonly start: Vector, public readonly end: Vector) {}
 
-  contains(position: Position): boolean {
+  contains(position: Vector): boolean {
     const minX = Math.min(this.start.x, this.end.x);
     const maxX = Math.max(this.start.x, this.end.x);
     const minY = Math.min(this.start.y, this.end.y);

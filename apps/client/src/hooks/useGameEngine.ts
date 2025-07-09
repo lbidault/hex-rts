@@ -30,7 +30,8 @@ export const useGameEngine = () => {
     const engine = new GameEngine(renderer);
 
     const selectionSystem = engine.getSelectionSystem();
-    const handler = new InputHandler(selectionSystem, updateDragArea);
+    const movementSystem = engine.getMovementSystem();
+    const handler = new InputHandler(selectionSystem, movementSystem, updateDragArea);
     const stateMachine = new InputStateMachine(handler);
     const input = new CanvasInputAdapter(canvasRef.current, stateMachine);
 

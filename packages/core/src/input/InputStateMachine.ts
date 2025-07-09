@@ -1,4 +1,4 @@
-import { distance, Position } from "../utils/math";
+import { distance, Vector } from "../utils/math";
 import { InputHandler } from "./InputHandler";
 import { InputButton, InputEvent } from "./InputEvents";
 
@@ -7,8 +7,8 @@ export const DRAG_MIN_DISTANCE = 5;
 
 export class InputStateMachine {
   private currentState: InputState = "IDLE";
-  private firstTap: { position: Position; timestamp: number } | null = null;
-  private dragStart: Position | null = null;
+  private firstTap: { position: Vector; timestamp: number } | null = null;
+  private dragStart: Vector | null = null;
   private doubleTapTimeout: number | null = null;
   private activeButton: InputButton | null = null;
 

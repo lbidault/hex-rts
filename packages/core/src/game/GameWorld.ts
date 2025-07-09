@@ -1,19 +1,17 @@
-import { EntityManager } from "../ecs/EntityManager";
-import { ComponentStore } from "../ecs/ComponentStore";
-import { Position } from "../utils/math";
+// import { EntityManager } from "../ecs/EntityManager";
+// import { ComponentStore } from "../ecs/ComponentStore";
+// import { Position } from "../utils/math";
+// import { PositionComponent } from "../ecs/components/Position";
+// import { SelectedComponent } from "../ecs/components/Selected";
 
-// import { SelectedComponent } from "../ecs/SelectedComponent";
+// // import { SelectedComponent } from "../ecs/SelectedComponent";
 
-export class GameWorld {
-  readonly entityManager = new EntityManager();
+// export class GameWorld {
+//   readonly entityManager = new EntityManager();
 
-  // Composants
-  readonly positions = new ComponentStore<Position>();
-  readonly selections = new ComponentStore<true>(); // ou SelectedComponent
+//   constructor() {}
 
-  constructor() {}
-
-  getEntities(): string[] {
-    return this.entityManager.getEntities();
-  }
-}
+//   getEntities(): string[] {
+//     return this.entityManager.getEntities();
+//   }
+// }

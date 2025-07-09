@@ -1,49 +1,47 @@
-import { GameWorld } from "../../../game/GameWorld";
-import { Position, distance } from "../../../utils/math";
+import { Vector, distance } from "../../../utils/math";
+import { EntityManager } from "../../EntityManager";
 import { SelectionArea } from "./SelectionArea";
 
 export const UNIT_SELECT_RADIUS = 25;
 
 export class SelectionSystem {
-  constructor(private world: GameWorld) {}
+  constructor(private entityManager: EntityManager) {}
 
   selectSingle(entityId: string) {
     this.clearSelection();
-    if (this.world.positions.has(entityId)) {
-      this.world.selections.add(entityId, true);
+    if (this.entityManager.positionComponents.has(entityId)) {
+      this.entityManager.selectedEntityIds.add(entityId);
     }
   }
 
   selectMultiple(entityIds: string[]) {
     this.clearSelection();
     entityIds.forEach((id) => {
-      if (this.world.positions.has(id)) {
-        this.world.selections.add(id, true);
+      if (this.entityManager.positionComponents.has(id)) {
+        this.entityManager.selectedEntityIds.add(id);
       }
     });
   }
 
   clearSelection() {
-    this.world.selections.getAll().forEach(([id]) => {
-      this.world.selections.remove(id);
-    });
+    this.entityManager.selectedEntityIds.clear();
   }
 
-  findEntityAtPosition(pos: Position): string | undefined {
-    return this.world.positions
+  findEntityAtPosition(pos: Vector): string | undefined {
+    return this.entityManager.positionComponents
       .getAll()
-      .find(([, p]) => distance(p, pos) < UNIT_SELECT_RADIUS)?.[0];
+      .find(([, c]) => distance(c.position, pos) < UNIT_SELECT_RADIUS)?.[0];
   }
 
   findEntitiesInArea(area: SelectionArea): string[] {
-    return this.world.positions
+    return this.entityManager.positionComponents
       .getAll()
-      .filter(([, p]) => area.contains(p))
+      .filter(([, c]) => area.contains(c.position))
       .map(([id]) => id);
   }
 
   getSelectedEntities(): string[] {
-    return this.world.selections.getAll().map(([id]) => id);
+    return Array.from(this.entityManager.selectedEntityIds);
   }
 
   selectEntitiesInArea(area: SelectionArea) {

@@ -1,20 +1,26 @@
 import { SelectionSystem, UNIT_SELECT_RADIUS } from "./SelectionSystem";
-import { GameWorld } from "../../../game/GameWorld";
 import { SelectionArea } from "./SelectionArea";
+import { EntityManager } from "../../EntityManager";
 
 describe("SelectionSystem", () => {
-  let world: GameWorld;
+  let entityManager: EntityManager;
   let selectionSystem: SelectionSystem;
 
   beforeEach(() => {
-    world = new GameWorld();
+    entityManager = new EntityManager();
 
     // Ajouter des entités avec positions
-    world.positions.add("entity1", { x: 10, y: 10 });
-    world.positions.add("entity2", { x: 50, y: 50 });
-    world.positions.add("entity3", { x: 100, y: 100 });
+    entityManager.positionComponents.add("entity1", {
+      position: { x: 10, y: 10 },
+    });
+    entityManager.positionComponents.add("entity2", {
+      position: { x: 50, y: 50 },
+    });
+    entityManager.positionComponents.add("entity3", {
+      position: { x: 100, y: 100 },
+    });
 
-    selectionSystem = new SelectionSystem(world);
+    selectionSystem = new SelectionSystem(entityManager);
   });
 
   afterEach(() => {

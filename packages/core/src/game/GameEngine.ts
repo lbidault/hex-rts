@@ -1,49 +1,55 @@
-import { GameWorld } from "./GameWorld";
 import { GameLoop } from "./GameLoop";
 import { SelectionSystem } from "../ecs/systems/selection/SelectionSystem";
 // import { MovementSystem } from "../ecs/systems/mouvement/MouvementSystem";
 import { Renderer } from "../ports/Renderer"; // ou autre renderer
-import { Position } from "../utils/math";
+import { Vector } from "../utils/math";
+import { MovementSystem } from "../ecs/systems/movement/MovementSystem";
+import { EntityManager } from "../ecs/EntityManager";
 
-const DEFAULT_UNITS: { id: string; position: Position }[] = [
-  { id: "1", position: { x: 50, y: 50 } },
-  { id: "2", position: { x: 150, y: 150 } },
+const DEFAULT_UNITS: { position: Vector }[] = [
+  { position: { x: 50, y: 50 } },
+  { position: { x: 150, y: 150 } },
 ];
 
 export class GameEngine {
-  public readonly world: GameWorld;
+  public readonly entityManager: EntityManager;
   private readonly loop: GameLoop;
   private readonly renderer?: Renderer;
 
   private readonly selectionSystem: SelectionSystem;
+  private readonly movementSystem: MovementSystem;
 
   constructor(renderer?: Renderer) {
-    this.world = new GameWorld();
+    this.entityManager = new EntityManager();
     this.renderer = renderer;
 
     // Inject default units
-    DEFAULT_UNITS.forEach(({ id, position }) => {
-      this.world.positions.add(id, position);
+    DEFAULT_UNITS.forEach(({ position }) => {
+      const id = this.entityManager.createEntity();
+      this.entityManager.positionComponents.add(id, { position });
     });
 
     // Init systems
-    this.selectionSystem = new SelectionSystem(this.world);
+    this.selectionSystem = new SelectionSystem(this.entityManager);
+    this.movementSystem = new MovementSystem(this.entityManager);
 
     // Loop
     this.loop = new GameLoop(
-      (delta: number) => {},
+      (delta: number) => {
+        this.movementSystem.update(delta);
+      },
       () => {
         if (!this.renderer) return;
         this.renderer.clear();
-        this.world.positions.getAll().forEach(([id, pos]) => {
+        this.entityManager.positionComponents.getAll().forEach(([id, c]) => {
           this.renderer!.renderUnit({
             id,
-            position: pos,
-            selected: this.world.selections.has(id),
+            position: c.position,
+            selected: this.entityManager.selectedEntityIds.has(id),
           });
         });
 
-        this.renderer.renderSelectionArea()
+        this.renderer.renderSelectionArea();
       }
     );
   }
@@ -57,15 +63,11 @@ export class GameEngine {
   }
 
   // Expose API utile
-  getWorld() {
-    return this.world;
-  }
-
   getSelectionSystem(): SelectionSystem {
     return this.selectionSystem;
   }
 
-  // getMovementSystem(): MovementSystem {
-  //   return this.movementSystem;
-  // }
+  getMovementSystem(): MovementSystem {
+    return this.movementSystem;
+  }
 }
